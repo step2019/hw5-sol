@@ -15,6 +15,10 @@ func init() {
 	http.HandleFunc("/rgv", handleGVRaw)
 }
 
+var (
+	gLabels = true // false
+)
+
 func (n Navi) GV(w io.Writer, g StationGraph, penWidth int) {
 	fmt.Fprintln(w, `graph g {`)
 	fmt.Fprintln(w, `  graph [overlap=scale]`)
@@ -26,6 +30,9 @@ func (n Navi) GV(w io.Writer, g StationGraph, penWidth int) {
 		return x + ":" + y
 	}
 	for x, ym := range g {
+		if !gLabels {
+			fmt.Fprintf(w, "  %s [label=\"\"]\n", x)
+		}
 		for y, lines := range ym {
 			key := keyFn(x, y)
 			if done[key] || x == y {
@@ -46,7 +53,7 @@ func handleGV(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/gv; charset=utf-8")
 	switch r.FormValue("adj") {
 	case "lines":
-		n.GV(w, n.LineAdjacency, 1)
+		n.GV(w, n.LineAdjacency, 3)
 	default:
 		n.GV(w, n.Adjacency, 5)
 	}
