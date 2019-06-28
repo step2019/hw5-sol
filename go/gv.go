@@ -53,7 +53,7 @@ func handleGV(w http.ResponseWriter, r *http.Request) {
 }
 
 var rawLineTmpl = template.Must(template.New("gv").Funcs(template.FuncMap{
-	"LineColor": func(s string) string { return "" },
+	"LineColor": func(s string) string { return "gross hack" },
 	"Connect": func(l string, stations []string) string {
 		if len(stations) < 1 {
 			return ""
@@ -72,7 +72,7 @@ var rawLineTmpl = template.Must(template.New("gv").Funcs(template.FuncMap{
 	},
 }).Parse(`
 graph g {
-  graph [overlap=scale]
+  graph [overlap=scale rankdir=LRq]
 
 {{range .Network}}
 subgraph line_{{.Name}} {
